@@ -1,3 +1,56 @@
-Tips
-Zero _day.Tips
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import datetime
+
+# Set up plot
+fig, ax = plt.subplots()
+
+# Create clock face
+circle = plt.Circle((0, 0), radius=1, color='lightblue')
+ax.add_patch(circle)
+
+# Add numbers for hours
+for i in range(1, 13):
+    angle = i / 12 * 360 - 90
+    x, y = 0.8 * np.cos(np.deg2rad(angle)), 0.8 * np.sin(np.deg2rad(angle))
+    ax.text(x, y, str(i), ha='center', va='center', fontsize=12)
+
+# Initialize hands
+hour_hand = plt.Line2D((0, 0), (0, 0), linewidth=3, color='black')
+minute_hand = plt.Line2D((0, 0), (0, 0), linewidth=2, color='black')
+second_hand = plt.Line2D((0, 0), (0, 0), linewidth=1, color='red')
+ax.add_line(hour_hand)
+ax.add_line(minute_hand)
+ax.add_line(second_hand)
+
+# Set limits and remove ticks
+ax.set_xlim(-1.2, 1.2)
+ax.set_ylim(-1.2, 1.2)
+ax.set_xticks([])
+ax.set_yticks([])
+
+# Animation function to update hands
+def animate(frame):
+    now = datetime.datetime.now()
+    hour = now.hour % 12
+    minute = now.minute
+    second = now.second
+
+    hour_angle = hour / 12 * 360 - 90
+    minute_angle = minute / 60 * 360 - 90
+    second_angle = second / 60 * 360 - 90
+
+    hour_hand.set_data([0, 0.5 * np.cos(np.deg2rad(hour_angle))],
+                       [0, 0.5 * np.sin(np.deg2rad(hour_angle))])
+    minute_hand.set_data([0, 0.7 * np.cos(np.deg2rad(minute_angle))],
+                          [0, 0.7 * np.sin(np.deg2rad(minute_angle))])
+    second_hand.set_data([0, 0.9 * np.cos(np.deg2rad(second_angle))],
+                          [0, 0.9 * np.sin(np.deg2rad(second_angle))])
+
+    return hour_hand, minute_hand, second_hand
+
+# Run animation
+ani = animation.FuncAnimation(fig, animate, interval=1000)
+plt.show()
+
 
